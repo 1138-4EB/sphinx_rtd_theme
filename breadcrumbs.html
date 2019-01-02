@@ -1,0 +1,114 @@
+{# Support for Sphinx 1.3+ page_source_suffix, but don't break old builds. #}
+
+{% if page_source_suffix %}
+{% set suffix = page_source_suffix %}
+{% else %}
+{% set suffix = source_suffix %}
+{% endif %}
+
+{% if meta is defined and meta is not none %}
+{% set check_meta = True %}
+{% else %}
+{% set check_meta = False %}
+{% endif %}
+
+{% if check_meta and 'github_url' in meta %}
+{% set display_github = True %}
+{% endif %}
+
+{% if check_meta and 'bitbucket_url' in meta %}
+{% set display_bitbucket = True %}
+{% endif %}
+
+{% if check_meta and 'gitlab_url' in meta %}
+{% set display_gitlab = True %}
+{% endif %}
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    {% block breadcrumbs %}
+    <li><a href="{{ pathto(master_doc) }}" class="icon icon-home"> {{ project }}</a> &raquo;</li>
+    {% for doc in parents %}
+    <li><a href="{{ doc.link|e }}">{{ doc.title }}</a> &raquo;</li>
+    {% endfor %}
+    <li>{{ title }}</li>
+    {% endblock %}
+  {% block breadcrumbs_aside %}
+  {% if hasdoc(pagename) %}
+    <li class="wy-breadcrumbs-aside"><ul>
+    {% set viewedit_pageref = conf_py_path|default("") + pagename + suffix|default("") %}
+    {% if display_github %}
+      {% set viewedit_type = 'github' %}
+      {% set viewedit_href = 'https://' + github_host|default("github.com") + '/' + github_user + '/' + github_repo %}
+      {% set viewedit_subref = github_version + viewedit_pageref %}
+    {% elif display_bitbucket %}
+      {% set viewedit_type = 'bitbucket' %}
+      {% set viewedit_href = 'https://bitbucket.org/' + bitbucket_user + '/' + bitbucket_repo %} %}
+      {% set viewedit_subref = '/src/' + bitbucket_version + viewedit_pageref %}
+    {% elif display_gitlab %}
+      {% set viewedit_type = 'gitlab' %}
+      {% set viewedit_href = 'https://' + gitlab_host|default("gitlab.com") + '/' + gitlab_user + '/' + gitlab_repo %}
+      {% set viewedit_subref = gitlab_version + viewedit_pageref %}
+    {% endif %}
+    {% if viewedit_href  %}
+      {% if check_meta and viewedit_type+'_url' in meta %}
+        <!-- User defined URL -->
+        <li><a title="{{ _('Sources on '+viewedit_type) }}" href="{{ meta[viewedit_type+'_url'] }}"><!--
+       --><i class="fa fa-{{ viewedit_type }}"></i><!--
+     --></a></li>
+      {% else %}
+        <li><a title="{{ _('Repo on '+viewedit_type) }}" href="{{ viewedit_href }}"><i class="fa fa-{{ viewedit_type }}"></i></a></li>
+        {% if viewedit_type == 'bitbucket' %}
+        <!-- TODO theme_vcs_pageview_mode -->
+        <li><a title="{{ _('View on '+viewedit_type) }}" href="{{ viewedit_href }}{{ viewedit_subref }}"> <i class="fa fa-binoculars"></i></a></li>
+        <li><a title="{{ _('Edit on '+viewedit_type) }}" href="{{ viewedit_href }}{{ viewedit_subref }}?mode=edit"> <i class="fa fa-pencil"></i></a></li>
+        {% else %}
+        <li><a title="{{ _('View on '+viewedit_type) }}" href="{{ viewedit_href }}/blob/{{ viewedit_subref }}"><i class="fa fa-binoculars"></i></a></li>
+        <li><a title="{{ _('Edit on '+viewedit_type) }}" href="{{ viewedit_href }}/edit/{{ viewedit_subref }}"><i class="fa fa-pencil"></i></a></li>
+        {% endif %}
+      {% endif %}
+    {% elif show_source %}
+      {% if source_url_prefix %}
+        {% set viewedit_ref = source_url_prefix + pagename + suffix|default("") %}
+        {% set viewedit_nofollow = '' %}
+      {% elif has_source and sourcename %}
+        {% set viewedit_ref = pathto('_sources/' + sourcename, true)|e %}
+        {% set viewedit_nofollow = ' rel="nofollow"' %}
+      {% endif %}
+      {% if viewedit_ref %}
+        <li><a title="{{ _('View page source') }}" href="{{ viewedit_ref }}"{{ viewedit_nofollow }}><i class="fa fa-binoculars"></i></a></li>
+      {% endif %}
+    {% endif %}
+  </ul></li>
+  {% endif %}
+  {% endblock %}
+  </ul>
+  <div class="last_info">
+    {%- if custom_last %}
+      {%- if custom_last_pre %}
+        {{ custom_last_pre }}{{ last_updated }}{{ custom_last }}
+      {%- else %}
+        {{ custom_last }}.
+      {%- endif %}
+    {%- elif build_id and build_url %}
+      {% trans build_url=build_url, build_id=build_id %}Build<a href="{{ build_url }}">{{ build_id }}</a>{% endtrans %}
+    {%- elif commit %}
+      {% trans commit=commit %}Revision <code>{{ commit }}</code>{% endtrans %}
+    {%- elif last_updated %}
+      {% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}{% endtrans %}
+    {%- endif %}
+  </div>
+
+  {% if (theme_prev_next_buttons_location == 'top' or theme_prev_next_buttons_location == 'both') and (next or prev) %}
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      {% if next %}
+        <a href="{{ next.link|e }}" class="btn btn-neutral float-right" title="{{ next.title|striptags|e }}" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      {% endif %}
+      {% if prev %}
+        <a href="{{ prev.link|e }}" class="btn btn-neutral float-left" title="{{ prev.title|striptags|e }}" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      {% endif %}
+  </div>
+  {% endif %}
+  <hr/>
+</div>

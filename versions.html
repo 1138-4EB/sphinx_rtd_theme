@@ -1,0 +1,44 @@
+{# Add rst-badge after rst-versions for small badge style. #}
+<div class="rst-versions shift-up" data-toggle="rst-versions" role="note" aria-label="versions">
+  <!--<div class="btd-menu">-->
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <a class="btd-logo" href="https://buildthedocs.github.io"><i class="fa fa-book" style="margin-right:5px;"></i> BuildTheDocs</a>
+    <select class="versions" onchange="location = this.value;">
+      {% for slug, url in versions %}
+      {%- if slug == current_version %}
+      <option value="{{ url }}" selected="selected">{{ slug }}</option>
+      {% else %}
+      <option value="{{ url }}">{{ slug }}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+    <span class="downloads">
+      {% for type, url in downloads %}
+      {%- if type == 'PDF' %}  {%- set dw_icon = "file-pdf-o" %}     {% endif %}
+      {%- if type == 'HTML' %} {%- set dw_icon = "file-archive-o" %} {% endif %}
+      {%- if type == 'EPUB' %} {%- set dw_icon = "file-text-o" %}    {% endif %}
+      <a title="Download {{ type }}" href="{{ url }}"><i class="fa fa-{{ dw_icon }}"></i></a>
+      {% endfor %}
+    </span>
+  </span>
+  <div class="rst-other-versions">
+    {% if READTHEDOCS %}
+    <dl>
+      <dt>{{ _('On Read the Docs') }}</dt>
+        <dd>
+          <a href="//{{ PRODUCTION_DOMAIN }}/projects/{{ slug }}/?fromdocs={{ slug }}">{{ _('Project Home') }}</a>
+        </dd>
+        <dd>
+          <a href="//{{ PRODUCTION_DOMAIN }}/builds/{{ slug }}/?fromdocs={{ slug }}">{{ _('Builds') }}</a>
+        </dd>
+    </dl>
+    <hr/>
+    {% endif %}
+    {%- if show_sphinx %}
+    {% trans %}Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/buildthedocs/sphinx_btd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a> and adapted to <a href="https://buildthedocs.github.io">Build the Docs</a>{% endtrans %}.
+    {%- endif %}
+    {% if READTHEDOCS %}
+    {% trans %}Free document hosting provided by <a href="http://www.readthedocs.org">Read the Docs</a>.{% endtrans %}
+    {%- endif %}
+  </div>
+</div>
