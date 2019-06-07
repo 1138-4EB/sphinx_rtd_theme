@@ -2,6 +2,12 @@
 html
   font-size: $base-font-size
 
+.document
+  text-align: justify
+
+p
+  margin-bottom: $base-font-size
+
 .wy-affix
   position: fixed
   top: $gutter
@@ -36,7 +42,7 @@ html
     display: inline-block
     line-height: $base-font-size * 2
     padding: 0 $gutter
-    margin: $base-line-height / 2 0 0 0
+    margin: 0
     display: block
     font-weight: bold
     text-transform: uppercase
@@ -182,7 +188,7 @@ html
   margin-bottom: $gutter / 2
   input[type=text]
     width: 100%
-    border-radius: 50px
+    /*border-radius: 50px*/
     padding: 6px 12px
     border-color: darken($link-color, 5%)
   img
@@ -210,6 +216,7 @@ html
       width: auto
       border-radius: 0
       max-width: 100%  // shrink on mobile, if appropriate
+      max-height: 150px
       background: rgba(0,0,0,0)  // make hover background of parent show up properly
     &.icon
       img.logo
@@ -249,73 +256,66 @@ html
     left: auto
     opacity: 0
 
-
 .wy-body-for-nav
   background: $section-background-color
-
-.wy-grid-for-nav
-  position: absolute
+  display: flex
+  flex-direction: row
   width: 100%
   height: 100%
+  max-width: 100%
+  max-height: 100%
+  overflow-x: hidden
+  overflow-y: hidden
+
+.wy-nav-content-wrap
+  flex-grow: 1
+  overflow-y: auto
+  background: $section-background-color
 
 .wy-nav-side
-  position: fixed
-  top: 0
-  bottom: 0
-  left: 0
-  padding-bottom: 2em
+  flex-grow: 0
+  flex-shrink: 0
   width: $nav-desktop-width
   overflow-x: hidden
   overflow-y: hidden
-  min-height: 100%
   color: $menu-medium
   background: $nav-background-color
   z-index: $z-index-popover
 
 .wy-side-scroll
   width: $nav-desktop-width + 20px
-  position: relative
   overflow-x: hidden
   overflow-y: scroll
   height: 100%
+  display: flex
+  flex-direction: column
+
+.wy-side-meta
+  flex-grow: 1
+  display: flex
+  flex-direction: column
+  hr
+    flex-grow: 0
+    margin: 0
+    margin-top: 10px
+    border-color: $gray
+  .wy-side-meta-pre
+    flex-grow: 1
+  .wy-side-meta-content
+    flex-grow: 0
+    padding: 10px
+    padding-right: 13px
+    font-size: 60%
+    text-align: justify
 
 .wy-nav-top
-  display: none
-  background: $link-color
-  color: $white
-  padding: $gutter / 4 $gutter / 2
-  position: relative
-  line-height: 50px
-  text-align: center
-  font-size: 100%
-  +clearfix
-  a
-    color: $white
-    font-weight: bold
-    +font-smooth
-  img
-    margin-right: $base-line-height / 2
-    height: 45px
-    width: 45px
-    background-color: $menu-logo-color
-    padding: 5px
-    border-radius: 100%
-  i
-    font-size: 30px
-    float: left
-    cursor: pointer
-    padding-top: inherit
-
-.wy-nav-content-wrap
-  margin-left: $nav-desktop-width
-  background: $section-background-color
-  min-height: 100%
+  display: none !important
 
 .wy-nav-content
   padding: $gutter $gutter * 2
+  padding-bottom: 0
   height: 100%
   max-width: $nav-content-width
-  margin: auto
 
 .wy-body-mask
   position: fixed
@@ -326,10 +326,15 @@ html
   z-index: $z-index-modal - 1
   &.on
     display: block
+
 footer
   color: $footer-color
-  p
-    margin-bottom: $base-line-height / 2
+  flex-grow: 1
+  display: flex
+  flex-direction: column
+  padding-bottom: 10px
+  hr
+    margin-bottom: 10px
   span.commit code
     padding: 0px
     font-family: $code-font-family
@@ -337,6 +342,26 @@ footer
     background: none
     border: none
     color: $footer-color
+
+.footer-pre
+  flex-grow: 1
+
+.contentinfo
+  text-align: center
+  display: flex
+  flex-direction: row
+
+.contentinfo-content
+  flex-grow: 1
+  p
+    margin-bottom: 0
+    font-size: 80%
+    line-height: $base-line-height * 3 / 4
+
+span.prevnext
+  min-width: 80px
+  a
+    line-height: $base-line-height * 1.5
 
 .rst-footer-buttons
   &:before, &:after
@@ -370,45 +395,30 @@ footer
   .wy-body-for-nav
     background: $section-background-color
   .wy-nav-top
-    display: block
+    display: inline-block !important
   .wy-nav-side
-    @if $nav-desktop-position == left
-      left: -$nav-desktop-width
-    @else
-      right: -$nav-desktop-width
+    display: none
     &.shift
-      width: 85%
-      left: 0
-  .wy-side-scroll
-    width: auto
-  .wy-side-nav-search
-    width: auto
-  .wy-menu.wy-menu-vertical
-    width: auto
-  .wy-nav-content-wrap
-    margin-left: 0
-    .wy-nav-content
-      padding: $gutter
-    &.shift
-      position: fixed
-      min-width: 100%
-      left: 85%
-      top: 0
-      height: 100%
-      overflow: hidden
+      display: block
 
 @media screen and (min-width: $nav-media-query)
-  .wy-nav-content-wrap
-    background: rgba(0,0,0,.05)
   .wy-nav-content
-    margin: 0
+    margin: auto
     background: $section-background-color
 
 @media print
-  .rst-versions, footer, .wy-nav-side
+  .wy-nav-side
     display: none
+
++media($mobile)
   .wy-nav-content-wrap
-    margin-left: 0
+    min-width: 280px
+
++media($tablet)
+  .wy-nav-content-wrap
+    min-width: 280px
+
+/* BREADCRUMBS */
 
 .wy-breadcrumbs
   +clearfix
@@ -434,11 +444,16 @@ footer
   font-size: 80%
   display: inline-block
 
-
 +media($mobile)
   .wy-breadcrumbs-extra
     display: none
-  .wy-breadcrumbs li.wy-breadcrumbs-aside
+  .wy-breadcrumbs li.wy-breadcrumbs-aside.shift
+    display: none
+  div.rst-versions
+    display: none
+
++media($tablet)
+  .rst-versions.shift
     display: none
 
 @media print

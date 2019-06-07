@@ -1,82 +1,128 @@
-{# Support for Sphinx 1.3+ page_source_suffix, but don't break old builds. #}
-
-{% if page_source_suffix %}
-{% set suffix = page_source_suffix %}
-{% else %}
-{% set suffix = source_suffix %}
-{% endif %}
-
-{% if meta is defined and meta is not none %}
-{% set check_meta = True %}
-{% else %}
-{% set check_meta = False %}
-{% endif %}
-
-{% if check_meta and 'github_url' in meta %}
-{% set display_github = True %}
-{% endif %}
-
-{% if check_meta and 'bitbucket_url' in meta %}
-{% set display_bitbucket = True %}
-{% endif %}
-
-{% if check_meta and 'gitlab_url' in meta %}
-{% set display_gitlab = True %}
-{% endif %}
+{% set pagename_wsuffix = pagename + page_source_suffix|default('') %}
+{% set check_meta = meta is defined and meta is not none %}
 
 <div role="navigation" aria-label="breadcrumbs navigation">
-
   <ul class="wy-breadcrumbs">
+    {% block mobile_nav %}
+      {# MOBILE NAV, TRIGGLES SIDE NAV ON TOGGLE #}
+      <li class="wy-nav-top"><a aria-label="top navigation" data-toggle="wy-nav-top" class="fa fa-bars"></a></li>
+    {% endblock %}
     {% block breadcrumbs %}
-      <li><a href="{{ pathto(master_doc) }}">{{ _('Docs') }}</a> &raquo;</li>
-        {% for doc in parents %}
-          <li><a href="{{ doc.link|e }}">{{ doc.title }}</a> &raquo;</li>
-        {% endfor %}
+      <li><a href="{{ pathto(master_doc) }}" class="icon icon-home"> {{ project }}</a> &raquo;</li>
+      {% for doc in parents %}
+        <li><a href="{{ doc.link|e }}">{{ doc.title }}</a> &raquo;</li>
+      {% endfor %}
       <li>{{ title }}</li>
     {% endblock %}
     {% block breadcrumbs_aside %}
-      <li class="wy-breadcrumbs-aside">
-        {% if hasdoc(pagename) %}
-            {% if display_github %}
-            {% if check_meta and 'github_url' in meta %}
-              <!-- User defined GitHub URL -->
-              <a href="{{ meta['github_url'] }}" class="fa fa-github"> {{ _('Edit on GitHub') }}</a>
-            {% else %}
-              <a href="https://{{ github_host|default("github.com") }}/{{ github_user }}/{{ github_repo }}/{{ theme_vcs_pageview_mode|default("blob") }}/{{ github_version }}{{ conf_py_path }}{{ pagename }}{{ suffix }}" class="fa fa-github"> {{ _('Edit on GitHub') }}</a>
-            {% endif %}
-          {% elif display_bitbucket %}
-            {% if check_meta and 'bitbucket_url' in meta %}
-              <!-- User defined Bitbucket URL -->
-              <a href="{{ meta['bitbucket_url'] }}" class="fa fa-bitbucket"> {{ _('Edit on Bitbucket') }}</a>
-            {% else %}
-              <a href="https://bitbucket.org/{{ bitbucket_user }}/{{ bitbucket_repo }}/src/{{ bitbucket_version}}{{ conf_py_path }}{{ pagename }}{{ suffix }}?mode={{ theme_vcs_pageview_mode|default("view") }}" class="fa fa-bitbucket"> {{ _('Edit on Bitbucket') }}</a>
-            {% endif %}
-          {% elif display_gitlab %}
-            {% if check_meta and 'gitlab_url' in meta %}
-              <!-- User defined GitLab URL -->
-              <a href="{{ meta['gitlab_url'] }}" class="fa fa-gitlab"> {{ _('Edit on GitLab') }}</a>
-            {% else %}
-              <a href="https://{{ gitlab_host|default("gitlab.com") }}/{{ gitlab_user }}/{{ gitlab_repo }}/{{ theme_vcs_pageview_mode|default("blob") }}/{{ gitlab_version }}{{ conf_py_path }}{{ pagename }}{{ suffix }}" class="fa fa-gitlab"> {{ _('Edit on GitLab') }}</a>
-            {% endif %}
-          {% elif show_source and source_url_prefix %}
-            <a href="{{ source_url_prefix }}{{ pagename }}{{ suffix }}">{{ _('View page source') }}</a>
-          {% elif show_source and has_source and sourcename %}
-            <a href="{{ pathto('_sources/' + sourcename, true)|e }}" rel="nofollow"> {{ _('View page source') }}</a>
+      <li class="wy-breadcrumbs-aside" data-toggle="rst-versions">
+      {% if hasdoc(pagename) %}
+        {% set viewedit_pageref = conf_py_path|default("") + pagename_wsuffix %}
+        {% if display_github %}
+          {% set viewedit_type = 'github' %}
+          {% set custom_edit_host = custom_edit_host|default('github.com/') %}
+        {% elif display_bitbucket %}
+          {% set viewedit_type = 'gitlab' %}
+          {% set custom_edit_host = custom_edit_host|default('bitbucket.org/') %}
+        {% elif display_gitlab %}
+          {% set viewedit_type = 'bitbucket' %}
+          {% set custom_edit_host = custom_edit_host|default('gitlab.com/') %}
+        {% endif %}
+
+        {% if check_meta and 'custom_edit_url' in meta %}
+          {% set viewedit_href = meta['custom_edit_url'] %}
+        {% elif custom_edit_url %}
+          {% set viewedit_href = custom_edit_url %}
+        {% else %}
+          {% set viewedit_href = 'https://' + custom_edit_host + slug_user + '/' + slug_repo %}
+          {% set viewedit_subref = slug_version + viewedit_pageref %}
+          {% if display_bitbucket %}
+            {% set viewedit_subref = '/src/' + viewedit_subref %}
           {% endif %}
         {% endif %}
+
+        {% if viewedit_href %}
+          {% if check_meta and viewedit_type+'_url' in meta %}
+            <a title="{{ _('View source') }}" href="{{ meta[viewedit_type+'_url'] }}"><i class="fa fa-{{ viewedit_type }}"></i></a>
+          {% else %}
+            <!--<li><a title="{{ _('Repo on '+viewedit_type) }}" href="{{ viewedit_href }}"><i class="fa fa-{{ viewedit_type }}"></i></a></li>-->
+            {% if viewedit_type == 'bitbucket' %}
+            <a title="{{ _('View source') }}" href="{{ viewedit_href }}{{ viewedit_subref }}"> <i class="fa fa-binoculars"></i></a>
+            <a title="{{ _('Edit source') }}" href="{{ viewedit_href }}{{ viewedit_subref }}?mode=edit"> <i class="fa fa-pencil"></i></a>
+            {% else %}
+            <a title="{{ _('View source') }}" href="{{ viewedit_href }}/blob/{{ viewedit_subref }}"><i class="fa fa-binoculars"></i></a>
+            <a title="{{ _('Edit source') }}" href="{{ viewedit_href }}/edit/{{ viewedit_subref }}"><i class="fa fa-pencil"></i></a>
+            {% endif %}
+          {% endif %}
+        {% elif show_source %}
+          {% if source_url_prefix %}
+            {% set viewedit_ref = source_url_prefix + pagename_wsuffix %}
+            {% set viewedit_nofollow = '' %}
+          {% elif has_source and sourcename %}
+            {% set viewedit_ref = pathto('_sources/' + sourcename, true)|e %}
+            {% set viewedit_nofollow = ' rel="nofollow"' %}
+          {% endif %}
+          {% if viewedit_ref %}
+            <a title="{{ _('View page source') }}" href="{{ viewedit_ref }}"{{ viewedit_nofollow }}><i class="fa fa-binoculars"></i></a>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+
+      {% if current_version %}
+        <span class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+          {% if versions %}
+            <select class="versions" onchange="location = this.value;">
+              {% for slug, url in versions %}
+                {%- if slug == current_version %}
+                  <option value="{{ url }}" selected="selected">{{ slug }}</option>
+                {% else %}
+                  <option value="{{ url }}">{{ slug }}</option>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <span class="rst-current-version" data-toggle="rst-current-version">v: {{ current_version }}</span>
+            {% endif %}
+            </select>
+          <span class="downloads">
+            {% for type, url in downloads %}
+              {%- if type == 'PDF' %}  {%- set dw_icon = "file-pdf-o" %}     {% endif %}
+              {%- if type == 'HTML' %} {%- set dw_icon = "file-archive-o" %} {% endif %}
+              {%- if type == 'EPUB' %} {%- set dw_icon = "file-text-o" %}    {% endif %}
+              <a title="Download {{ type }}" href="{{ url }}"><i class="fa fa-{{ dw_icon }}"></i></a>
+            {% endfor %}
+          </span>
+        </span>
+      {% endif %}
+
       </li>
     {% endblock %}
   </ul>
 
-  {% if (theme_prev_next_buttons_location == 'top' or theme_prev_next_buttons_location == 'both') and (next or prev) %}
-  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
-      {% if next %}
-        <a href="{{ next.link|e }}" class="btn btn-neutral float-right" title="{{ next.title|striptags|e }}" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+  <div class="contentinfo">
+    <span class="prevnext" role="navigation" aria-label="breadcrumb navigation">
+      {% if (theme_prevnext_location in ['top', 'both']) and prev %}
+        <a href="{{ prev.link|e }}" class="prevnext float-left" title="{{ prev.title|striptags|e }}" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> {{ _('Previous') }}</a>
       {% endif %}
-      {% if prev %}
-        <a href="{{ prev.link|e }}" class="btn btn-neutral float-left" title="{{ prev.title|striptags|e }}" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+    </span>
+    <div class="contentinfo-content" role="contentinfo">
+
+      {% if check_meta %}
+        <p>
+          {% if 'author' in meta %}
+            <b>author:</b> {{ meta['author'] }}
+          {% endif %}
+          {% if 'tags' in meta %}
+            <b>tags:</b> {{ meta['tags'] }}
+          {% endif %}
+        </p>
       {% endif %}
+    </div>
+    <span class="prevnext" role="navigation" aria-label="breadcrumb navigation">
+      {% if (theme_prevnext_location in ['top', 'both']) and next %}
+        <a href="{{ next.link|e }}" class="prevnext float-right" title="{{ next.title|striptags|e }}" accesskey="n" rel="next">{{ _('Next') }} <span class="fa fa-arrow-circle-right"></span></a>
+      {% endif %}
+    </span>
   </div>
-  {% endif %}
+
   <hr/>
 </div>
