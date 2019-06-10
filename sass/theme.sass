@@ -1,36 +1,77 @@
-// ------------------------------------------------------------
 // CONTRIBUTORS, PLEASE READ THIS!
-// ------------------------------------------------------------
-// This theme pulls from other frontend projects. The only
-// things you should edit are the sass files that start with
-// "theme_*.sass". All other files are loaded through bower.
-// ------------------------------------------------------------
+// This theme pulls from other frontend projects. The only things you should edit are the sass
+// files that start with "theme_*.sass". All other files are loaded through bower.
 
 // Variable defaults set by Wyrm
 @import wyrm_core/wy_variables
 
-// Variable overrides that change coloring and fonts for this theme.
-@import theme_variables
+// In here are varibles used for sphinx_rtd_theme, they either add to or overwrite the default ones
+// that are set in wyrm_core/wy_variables.sass. You'll find wyrm in bower_components if you're looking
+// for a reference.
+$font-awesome-dir:                    "../fonts/"
+$static-img:                          "../img/"
+$nav-content-width:                   800px
+$nav-media-query:                     (($nav-desktop-width) + ($nav-content-width))
+$mathjax-color:                       $text-color
+$headerlink-color:                    $text-color
+// Code colors
+$text-viewcode-color:                 $green
+$text-codexref-color:                 $text-color
+// Definition list colors
+$class-color:                         $blue
+$method-color:                        $gray
+// GUI label color
+$guilabel-color:                      $blue
+// Footer colors
+$footer-color:                        $text-medium
+// Menu colors
+$menu-vertical-background-color:      $section-background-color
+// Menu text colors
+$menu-color:                          $gray
+$menu-dark:                           lighten($menu-color,10%) !default
+$menu-medium:                         lighten($menu-color,27.5%) !default
+$menu-light:                          lighten($menu-color,45%) !default
+$menu-lighter:                        lighten($menu-color,60%) !default
+// Menu link colors
+$menu-link-color:                     $text-color
+$menu-link-dark:                      $text-dark
+$menu-link-medium:                    $text-medium
+$menu-link-light:                     $text-lighter
+$menu-link-active:                    $white
+// Navigation colors
+$nav-background-color:                $menu-background-color
+$nav-search-background-color:         $blue
+$nav-search-color:                    $section-background-color
+$nav-link-color:                      $blue
+$nav-link-color-visited:              $purple
+$nav-link-color-hover:                lighten($nav-link-color, 6%) !default
+$nav-link-color-alt:                  hsl(33, 100%, 51%)
+$nav-caption:                         lighten($blue, 15%)
+// Sidebar colors
+$sidebar-background-color:            $table-stripe-color
+$sidebar-border-color:                $table-border-color
+$sidebar-title-background-color:      $table-border-color
+// Sphinx highlight color
+$highlight-color:                     $yellow
+$base-font-family:                    "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif
+$custom-font-family:                  "Roboto Slab", "ff-tisa-web-pro", "Georgia", Arial, sans-serif
+$custom-font-family2:                 Georgia, serif
+$code-font-family:                    SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier, monospace
 
 // bourbon.io framework
 @import bourbon
-
 // Bourbon.io/neat framework, with some default media queries
 @import wyrm_core/grid_settings
 @import neat
 // Some corrections for neat
 @import wyrm_core/neat_extra
-
 // Custom reset
 @import wyrm_core/reset
-
 // Wyrm mixins
 @import wyrm_core/mixin
-
 // Font Awesome 4.0 with wyrm extras
 @import font-awesome
 @import wyrm_core/font_icon_defaults
-
 // Wyrm core styles used in this theme
 @import wyrm_core/alert
 @import wyrm_core/button
@@ -39,12 +80,86 @@
 @import wyrm_core/generic
 @import wyrm_core/table
 @import wyrm_core/type
-
 // Theme specific styles. These are likely the files you want to edit.
-@import theme_breadcrumbs
 @import theme_layout
 @import theme_badge
 @import theme_rst
-@import theme_mathjax
-@import theme_font_awesome_compatibility
-@import theme_font_local
+
+/* MATHJAX */
+
+span[id*='MathJax-Span']
+  color: $mathjax-color
+
+.math
+  text-align: center
+
+/* FONT AWESOME COMPATIBILITY */
+
+.icon
+  @extend .fa
+.icon-home
+  @extend .fa-home
+.icon-search
+  @extend .fa-search
+.icon-book
+  @extend .fa-book
+.icon-caret-down
+  @extend .fa-caret-down
+.icon-github
+  @extend .fa-github
+.icon-bitbucket
+  @extend .fa-bitbucket
+.icon-gitlab
+  @extend .fa-gitlab
+.icon-fire
+  @extend .fa-fire
+.icon-circle-arrow-right
+  @extend .fa-arrow-circle-right
+.icon-circle-arrow-left
+  @extend .fa-arrow-circle-left
+.icon-link
+  @extend .fa-link
+
+/* FONT LOCAL */
+
+@font-face
+  font-family: 'Lato'
+  src: url('../fonts/Lato/lato-regular.eot')
+  src: url('../fonts/Lato/lato-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/Lato/lato-regular.woff2') format('woff2'), url('../fonts/Lato/lato-regular.woff') format('woff'), url('../fonts/Lato/lato-regular.ttf') format('truetype')
+  font-weight: 400
+  font-style: normal
+
+@font-face
+  font-family: 'Lato'
+  src: url('../fonts/Lato/lato-bold.eot')
+  src: url('../fonts/Lato/lato-bold.eot?#iefix') format('embedded-opentype'), url('../fonts/Lato/lato-bold.woff2') format('woff2'), url('../fonts/Lato/lato-bold.woff') format('woff'), url('../fonts/Lato/lato-bold.ttf') format('truetype')
+  font-weight: 700
+  font-style: normal
+
+@font-face
+  font-family: 'Lato'
+  src: url('../fonts/Lato/lato-bolditalic.eot')
+  src: url('../fonts/Lato/lato-bolditalic.eot?#iefix') format('embedded-opentype'), url('../fonts/Lato/lato-bolditalic.woff2') format('woff2'), url('../fonts/Lato/lato-bolditalic.woff') format('woff'), url('../fonts/Lato/lato-bolditalic.ttf') format('truetype')
+  font-weight: 700
+  font-style: italic
+
+@font-face
+  font-family: 'Lato'
+  src: url('../fonts/Lato/lato-italic.eot')
+  src: url('../fonts/Lato/lato-italic.eot?#iefix') format('embedded-opentype'), url('../fonts/Lato/lato-italic.woff2') format('woff2'), url('../fonts/Lato/lato-italic.woff') format('woff'), url('../fonts/Lato/lato-italic.ttf') format('truetype')
+  font-weight: 400
+  font-style: italic
+
+@font-face
+  font-family: 'Roboto Slab'
+  font-style: normal
+  font-weight: 400
+  src: url('../fonts/RobotoSlab/roboto-slab.eot')
+  src: url('../fonts/RobotoSlab/roboto-slab-v7-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/RobotoSlab/roboto-slab-v7-regular.woff2') format('woff2'), url('../fonts/RobotoSlab/roboto-slab-v7-regular.woff') format('woff'), url('../fonts/RobotoSlab/roboto-slab-v7-regular.ttf') format('truetype')
+
+@font-face
+  font-family: 'Roboto Slab'
+  font-style: normal
+  font-weight: 700
+  src: url('../fonts/RobotoSlab/roboto-slab-v7-bold.eot')
+  src: url('../fonts/RobotoSlab/roboto-slab-v7-bold.eot?#iefix') format('embedded-opentype'), url('../fonts/RobotoSlab/roboto-slab-v7-bold.woff2') format('woff2'), url('../fonts/RobotoSlab/roboto-slab-v7-bold.woff') format('woff'), url('../fonts/RobotoSlab/roboto-slab-v7-bold.ttf') format('truetype')
