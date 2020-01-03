@@ -240,9 +240,37 @@ p
     &.icon
       img.logo
         margin-top: 0.85em  // space it away from the title text
-  > div.version
+
+.menu-versions
+  li.vercurr
+    padding: $gutter / 4 $gutter
+    font-size: 90%
+    i
+      cursor: pointer
     a
-      color: #d9d9d9
+      line-height: 18px
+      color: $menu-link-light
+  li.verother
+    a
+      line-height: 18px
+      padding: $gutter / 4 $gutter
+      display: block
+      position: relative
+      font-size: 90%
+      color: $menu-link-light
+      &:hover
+        background-color: lighten($menu-background-color, 10%)
+        cursor: pointer
+        span.toctree-expand
+          color: $menu-link-light
+      &:active
+        background-color: $menu-logo-color
+        cursor: pointer
+        color: $menu-link-active
+        span.toctree-expand
+          color: $menu-link-active
+  li.vertree.otherver
+    display: none
 
 .wy-nav .wy-menu-vertical
   header

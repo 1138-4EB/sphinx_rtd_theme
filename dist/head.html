@@ -51,6 +51,8 @@
   {%- for scriptfile in script_files %}
     {{ js_tag(scriptfile) }}
   {%- endfor %}
+  <script>const pathToVersionsJSON = "{{ pathto('../versions.json', 1) }}"</script>
+  <script>const pathToMasterDoc = "{{ pathto(master_doc) }}"</script>
   <script type="text/javascript" src="{{ pathto('_static/js/theme.js', 1) }}"></script>
   {# OPENSEARCH #}
   {%- if use_opensearch %}

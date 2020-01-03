@@ -21,7 +21,13 @@
         {% endif %}
         </a>
         {% if theme_display_version %}
-          <div class="version" ><a href="{{ pathto(master_doc) }}">{{ version }}</a></div>
+          {% block versions %}
+          <div class="wy-menu menu-versions" >
+            <ul id="version-select">
+              <li class="vertree">{{ version }}</li>
+            </ul>
+          </div>
+          {% endblock %}
         {% endif %}
       {% endblock %}
       {% endif %}

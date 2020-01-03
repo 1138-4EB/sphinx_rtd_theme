@@ -64,6 +64,10 @@ function ThemeNav () {
             .on('click', "[data-toggle='wy-nav-top']", function() {
                 $("[data-toggle='wy-nav-shift']").toggleClass("shift");
             })
+
+            .on('click', "[data-toggle='list-versions']", function() {
+                $("[data-toggle='other-version']").toggle();
+            })
             // Nav menu link click operations
             .on('click', ".wy-menu-vertical .current ul li a", function() {
                 var target = $(this);
@@ -204,3 +208,25 @@ if (typeof(window) != 'undefined') {
             clearTimeout(id);
         };
 }());
+
+
+// Load list of versions from '../versions.json'
+$(document).ready(function() {
+    var $v = $('#version-select')
+    $.getJSON( pathToVersionsJSON, function( data ) {
+      const curr = String($v[0].innerHTML).match(/.*>(.*)<.*/)[1];
+      const vcurr = '/v' + curr + '/'
+      $v[0].innerHTML = '';
+      var url = String(window.location);
+      if (url.search('/master/') != -1) {
+        url = url.replace('/master/', vcurr);
+      }
+      data.forEach(function(el) {
+        $v.append( ( el === curr ) ?
+          '<li class="vercurr"><i class="fa fa-code-fork" data-toggle="list-versions">&nbsp;</i> <a href="' + pathToMasterDoc + '">v' + el + '</a></li>'
+        :
+          '<li class="verother" data-toggle="other-version" style="display: none;"><a href="' + url.replace(vcurr, '/v' + el + '/') + '">v' + el + '</a></li>'
+        );
+      });
+    });
+});
