@@ -2,13 +2,16 @@
 *.egg-info
 *.egg
 *build/
-.tox
-.coverage
 *.DS_Store
 *.sass-cache
 *.map
+.coverage
+.node-version
+.python-version
 .ropeproject/
 .ruby-version
+.tox
+.vscode
 dist/
 bower_components/
 include/
@@ -19,7 +22,5 @@ npm-debug.log
 pip-selfcheck.json
 sphinx_rtd_theme/static/fonts/Lato/
 sphinx_rtd_theme/static/fonts/RobotoSlab/
-.python-version
-.node-version
 sphinx_rtd_theme/static/js/html5shiv.min.js
 sphinx_rtd_theme/static/js/html5shiv-printshiv.min.js
