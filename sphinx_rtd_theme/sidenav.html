@@ -57,8 +57,7 @@
     </div>
     {% endblock %}
   </div>
-  {% if READTHEDOCS %}
-  {# Add rst-badge after rst-versions for small badge style. #}
+  {% if current_version or versions or downloads %}
   <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
       <span class="fa fa-book"> Read the Docs</span>
@@ -78,6 +77,7 @@
           <dd><a href="{{ url }}">{{ type }}</a></dd>
         {% endfor %}
       </dl>
+      {% if READTHEDOCS %}
       <dl>
         {# Translators: The phrase "Read the Docs" is not translated #}
         <dt>{{ _('On Read the Docs') }}</dt>
@@ -88,6 +88,7 @@
             <a href="//{{ PRODUCTION_DOMAIN }}/builds/{{ slug }}/?fromdocs={{ slug }}">{{ _('Builds') }}</a>
           </dd>
       </dl>
+      {% endif %}
     </div>
   </div>
   {% endif %}
