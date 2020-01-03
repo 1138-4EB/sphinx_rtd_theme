@@ -11,8 +11,7 @@ module.exports = {
     minimizer: [new TerserPlugin(), new OptimizeCssAssetsPlugin({})]
   },
   entry: {
-    theme: ["./src/theme.js", "./src/sass/theme.sass"],
-    badge_only: "./src/sass/badge_only.sass"
+    theme: ["./src/theme.js", "./src/sass/theme.sass"]
   },
   output: {
     filename: "js/[name].js?[hash]",
