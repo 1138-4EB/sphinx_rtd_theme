@@ -115,7 +115,7 @@ setup(
         ]
     },
     install_requires=[
-       'sphinx'
+       'sphinx>=1.8.0'
     ],
     tests_require=[
         'pytest',
