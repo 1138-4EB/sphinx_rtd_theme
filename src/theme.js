@@ -18,14 +18,6 @@ function ThemeNav () {
     nav.enable = function (withStickyNav) {
         var self = this;
 
-        // TODO this can likely be removed once the theme javascript is broken
-        // out from the RTD assets. This just ensures old projects that are
-        // calling `enable()` get the sticky menu on by default. All other cals
-        // to `enable` should include an argument for enabling the sticky menu.
-        if (typeof(withStickyNav) == 'undefined') {
-            withStickyNav = true;
-        }
-
         if (self.isRunning) {
             // Only allow enabling nav logic once
             return;
@@ -34,10 +26,8 @@ function ThemeNav () {
         self.isRunning = true;
         jQuery(function ($) {
             self.init($);
-
             self.reset();
             self.win.on('hashchange', self.reset);
-
             if (withStickyNav) {
                 // Set scroll monitor
                 self.win.on('scroll', function () {
@@ -49,7 +39,6 @@ function ThemeNav () {
                     }
                 });
             }
-
             // Set resize monitor
             self.win.on('resize', function () {
                 if (!self.winResize) {
@@ -57,16 +46,9 @@ function ThemeNav () {
                     requestAnimationFrame(function() { self.onResize(); });
                 }
             });
-
             self.onResize();
         });
 
-    };
-
-    // TODO remove this with a split in theme and Read the Docs JS logic as
-    // well, it's only here to support 0.3.0 installs of our theme.
-    nav.enableSticky = function() {
-        this.enable(true);
     };
 
     nav.init = function ($) {
@@ -81,33 +63,21 @@ function ThemeNav () {
             // Shift nav in mobile when clicking the menu.
             .on('click', "[data-toggle='wy-nav-top']", function() {
                 $("[data-toggle='wy-nav-shift']").toggleClass("shift");
-                $("[data-toggle='rst-versions']").toggleClass("shift");
             })
-
             // Nav menu link click operations
             .on('click', ".wy-menu-vertical .current ul li a", function() {
                 var target = $(this);
-                // Close menu when you click a link.
-                $("[data-toggle='wy-nav-shift']").removeClass("shift");
-                $("[data-toggle='rst-versions']").toggleClass("shift");
                 // Handle dynamic display of l3 and l4 nav lists
                 self.toggleCurrent(target);
                 self.hashChange();
             })
-            .on('click', "[data-toggle='rst-current-version']", function() {
-                $("[data-toggle='rst-versions']").toggleClass("shift-up");
-            })
 
         // Make tables responsive
-        $("table.docutils:not(.field-list,.footnote,.citation)")
-            .wrap("<div class='wy-table-responsive'></div>");
-
+        $("table.docutils:not(.field-list,.footnote,.citation)").wrap("<div class='wy-table-responsive'></div>");
         // Add extra class to responsive tables that contain
         // footnotes or citations so that we can target them for styling
-        $("table.docutils.footnote")
-            .wrap("<div class='wy-table-responsive footnote'></div>");
-        $("table.docutils.citation")
-            .wrap("<div class='wy-table-responsive citation'></div>");
+        $("table.docutils.footnote").wrap("<div class='wy-table-responsive footnote'></div>");
+        $("table.docutils.citation").wrap("<div class='wy-table-responsive citation'></div>");
 
         // Add expand links to all parents of nested ul
         $('.wy-menu-vertical ul').not('.simple').siblings('a').each(function () {
@@ -203,10 +173,6 @@ module.exports.ThemeNav = ThemeNav();
 if (typeof(window) != 'undefined') {
     window.SphinxRtdTheme = {
         Navigation: module.exports.ThemeNav,
-        // TODO remove this once static assets are split up between the theme
-        // and Read the Docs. For now, this patches 0.3.0 to be backwards
-        // compatible with a pre-0.3.0 layout.html
-        StickyNav: module.exports.ThemeNav,
     };
 }
 
@@ -214,7 +180,6 @@ if (typeof(window) != 'undefined') {
 // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
 // https://gist.github.com/paulirish/1579671
 // MIT license
-
 (function() {
     var lastTime = 0;
     var vendors = ['ms', 'moz', 'webkit', 'o'];

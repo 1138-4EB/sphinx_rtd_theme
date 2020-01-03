@@ -2,10 +2,9 @@
 {{ metatags }}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {% block htmltitle %}
-<title>{{ title|striptags|e }}{{ titlesuffix }}</title>
+<title>{{ project }}: {{ title|striptags|e }}{{ titlesuffix }}</title>
 {% endblock %}
 
-{# FAVICON #}
 {% if favicon %}
   <link rel="shortcut icon" href="{{ pathto('_static/' + favicon, 1) }}"/>
 {% else %}
@@ -19,7 +18,7 @@
   <meta name="application-name" content="BuildTheDocs">
   <meta name="theme-color" content="#e6e6e6">
 {% endif %}
-{# CANONICAL URL #}
+
 {% if theme_canonical_url %}
   <link rel="canonical" href="{{ theme_canonical_url }}{{ pagename }}.html"/>
 {% endif %}
@@ -38,7 +37,6 @@
 <link rel="stylesheet" href="{{ pathto(css, 1) }}" type="text/css" />
   {%- endif %}
 {%- endfor %}
-
 {%- for cssfile in extra_css_files %}
   <link rel="stylesheet" href="{{ pathto(cssfile, 1) }}" type="text/css" />
 {%- endfor %}

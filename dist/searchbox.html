@@ -1,9 +1,11 @@
 {%- if builder != 'singlehtml' %}
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="{{ pathto('search') }}" method="get">
-    <input type="text" name="q" placeholder="{{ _('Search docs') }}" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+<div class="wy-side-nav-search" {% if theme_style_nav_header_background %} style="background: {{theme_style_nav_header_background}}" {% endif %}>
+  <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="{{ pathto('search') }}" method="get">
+      <input type="text" name="q" placeholder="{{ _('Search docs') }}" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+  </div>
 </div>
 {%- endif %}

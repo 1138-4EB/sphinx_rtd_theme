@@ -1,37 +1,28 @@
-{# Support for Sphinx 1.3+ page_source_suffix, but don't break old builds. #}
+{% set pagename_wsuffix = pagename + page_source_suffix|default('') %}
+{% set check_meta = meta is defined and meta is not none %}
 
-{% if page_source_suffix %}
-{% set suffix = page_source_suffix %}
-{% else %}
-{% set suffix = source_suffix %}
-{% endif %}
+{%- if theme_homepath %}
+  {%- set home_path = theme_homepath %}
+{%- else %}
+  {%- set home_path = pathto(master_doc) %}
+{%- endif %}
 
-{% if meta is defined and meta is not none %}
-{% set check_meta = True %}
-{% else %}
-{% set check_meta = False %}
-{% endif %}
-
-{% if check_meta and 'github_url' in meta %}
-{% set display_github = True %}
-{% endif %}
-
-{% if check_meta and 'bitbucket_url' in meta %}
-{% set display_bitbucket = True %}
-{% endif %}
-
-{% if check_meta and 'gitlab_url' in meta %}
-{% set display_gitlab = True %}
-{% endif %}
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+<div id="breadcrumbs" role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
+    {% block mobile_nav %}
+      {# MOBILE NAV, TRIGGLES SIDE NAV ON TOGGLE #}
+      <li class="wy-nav-top"><a aria-label="top navigation" data-toggle="wy-nav-top" class="fa fa-bars"></a></li>
+    {% endblock %}
     {% block breadcrumbs %}
-      <li><a href="{{ pathto(master_doc) }}" class="icon icon-home"></a> &raquo;</li>
-        {% for doc in parents %}
-          <li><a href="{{ doc.link|e }}">{{ doc.title }}</a> &raquo;</li>
-        {% endfor %}
+        <li><a href="{{ home_path }}" class="icon icon-home"> {{ project }}</a><!--
+        -->{% if theme_homepath %}<!--
+        --></li>{% if theme_display_version %}<li> [<a href="{{ pathto(master_doc) }}">{{ version }}</a>] &raquo;</li>{% endif %}<!--
+        -->{% else %}<!--
+        -->&raquo;</li>
+        {% endif %}
+      {% for doc in parents %}
+        <li><a href="{{ doc.link|e }}">{{ doc.title }}</a> &raquo;</li>
+      {% endfor %}
       <li>{{ title }}</li>
     {% endblock %}
     {% block breadcrumbs_aside %}
@@ -39,15 +30,33 @@
     {% endblock %}
   </ul>
 
-  {% if (theme_prev_next_buttons_location == 'top' or theme_prev_next_buttons_location == 'both') and (next or prev) %}
-  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
-      {% if next %}
-        <a href="{{ next.link|e }}" class="btn btn-neutral float-right" title="{{ next.title|striptags|e }}" accesskey="n">{{ _('Next') }} <span class="fa fa-arrow-circle-right"></span></a>
+  {% if (check_meta and (('author' in meta) or ('tags' in meta)))
+     or ((theme_prev_next_buttons_location in ['top', 'both']) and (next or prev))
+  %}
+  <hr class="nomarginbot"/>
+  <span class="contentinfo" role="navigation" aria-label="breadcrumb navigation">
+    {% if (theme_prev_next_buttons_location in ['top', 'both']) and prev %}
+    <span class="prevnext"><a href="{{ prev.link|e }}" class="float-left" title="{{ prev.title|striptags|e }}" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> {{ _('Previous') }}</a></span>
+    {% endif %}
+    <span class="contentinfo-content" role="contentinfo">
+      {% if check_meta %}
+        <p>
+          {% if 'author' in meta %}
+            <b>author:</b> {{ meta['author'] }}
+          {% endif %}
+          {% if 'tags' in meta %}
+            <b>tags:</b> {{ meta['tags'] }}
+          {% endif %}
+        </p>
       {% endif %}
-      {% if prev %}
-        <a href="{{ prev.link|e }}" class="btn btn-neutral float-left" title="{{ prev.title|striptags|e }}" accesskey="p"><span class="fa fa-arrow-circle-left"></span> {{ _('Previous') }}</a>
-      {% endif %}
-  </div>
+    </span>
+    {% if (theme_prev_next_buttons_location in ['top', 'both']) and next %}
+    <span class="prevnext"><a href="{{ next.link|e }}" class="float-right" title="{{ next.title|striptags|e }}" accesskey="n" rel="next">{{ _('Next') }} <span class="fa fa-arrow-circle-right"></span></a></span>
+    {% endif %}
+  </span>
+  <hr class="nomargintop"/>
+  {% else %}
+  <hr/>
   {% endif %}
   <hr/>
 </div>

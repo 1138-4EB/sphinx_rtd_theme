@@ -1,30 +1,53 @@
 <li class="wy-breadcrumbs-aside">
-  {% if hasdoc(pagename) %}
-      {% if display_github %}
-      {% if check_meta and 'github_url' in meta %}
-        <!-- User defined GitHub URL -->
-        <a href="{{ meta['github_url'] }}" class="fa fa-github"> {{ _('Edit on GitHub') }}</a>
-      {% else %}
-        <a href="https://{{ github_host|default("github.com") }}/{{ github_user }}/{{ github_repo }}/{{ theme_vcs_pageview_mode|default("blob") }}/{{ github_version }}{{ conf_py_path }}{{ pagename }}{{ suffix }}" class="fa fa-github"> {{ _('Edit on GitHub') }}</a>
-      {% endif %}
-    {% elif display_bitbucket %}
-      {% if check_meta and 'bitbucket_url' in meta %}
-        <!-- User defined Bitbucket URL -->
-        <a href="{{ meta['bitbucket_url'] }}" class="fa fa-bitbucket"> {{ _('Edit on Bitbucket') }}</a>
-      {% else %}
-        <a href="https://bitbucket.org/{{ bitbucket_user }}/{{ bitbucket_repo }}/src/{{ bitbucket_version}}{{ conf_py_path }}{{ pagename }}{{ suffix }}?mode={{ theme_vcs_pageview_mode|default("view") }}" class="fa fa-bitbucket"> {{ _('Edit on Bitbucket') }}</a>
-      {% endif %}
-    {% elif display_gitlab %}
-      {% if check_meta and 'gitlab_url' in meta %}
-        <!-- User defined GitLab URL -->
-        <a href="{{ meta['gitlab_url'] }}" class="fa fa-gitlab"> {{ _('Edit on GitLab') }}</a>
-      {% else %}
-        <a href="https://{{ gitlab_host|default("gitlab.com") }}/{{ gitlab_user }}/{{ gitlab_repo }}/{{ theme_vcs_pageview_mode|default("blob") }}/{{ gitlab_version }}{{ conf_py_path }}{{ pagename }}{{ suffix }}" class="fa fa-gitlab"> {{ _('Edit on GitLab') }}</a>
-      {% endif %}
-    {% elif show_source and source_url_prefix %}
-      <a href="{{ source_url_prefix }}{{ pagename }}{{ suffix }}">{{ _('View page source') }}</a>
-    {% elif show_source and has_source and sourcename %}
-      <a href="{{ pathto('_sources/' + sourcename, true)|e }}" rel="nofollow"> {{ _('View page source') }}</a>
+{% if hasdoc(pagename) %}
+  {% set viewedit_pageref = conf_py_path|default("") + pagename_wsuffix %}
+  {% if display_github %}
+    {% set viewedit_type = 'github' %}
+    {% set custom_edit_host = custom_edit_host|default('github.com/') %}
+  {% elif display_bitbucket %}
+    {% set viewedit_type = 'gitlab' %}
+    {% set custom_edit_host = custom_edit_host|default('bitbucket.org/') %}
+  {% elif display_gitlab %}
+    {% set viewedit_type = 'bitbucket' %}
+    {% set custom_edit_host = custom_edit_host|default('gitlab.com/') %}
+  {% endif %}
+
+  {% if check_meta and 'custom_edit_url' in meta %}
+    {% set viewedit_href = meta['custom_edit_url'] %}
+  {% elif custom_edit_url %}
+    {% set viewedit_href = custom_edit_url %}
+  {% elif custom_edit_host %}
+    {% set viewedit_href = 'https://' + custom_edit_host + slug_user + '/' + slug_repo %}
+    {% set viewedit_subref = slug_path + viewedit_pageref %}
+    {% if display_bitbucket %}
+      {% set viewedit_subref = '/src/' + viewedit_subref %}
     {% endif %}
   {% endif %}
+
+  {% if viewedit_href %}
+    {% if check_meta and viewedit_type+'_url' in meta %}
+      <a title="{{ _('View source') }}" href="{{ meta[viewedit_type+'_url'] }}"><i class="fa fa-{{ viewedit_type }}"></i></a>
+    {% else %}
+      <!--<li><a title="{{ _('Repo on '+viewedit_type) }}" href="{{ viewedit_href }}"><i class="fa fa-{{ viewedit_type }}"></i></a></li>-->
+      {% if viewedit_type == 'bitbucket' %}
+      <a title="{{ _('View source') }}" href="{{ viewedit_href }}{{ viewedit_subref }}"> <i class="fa fa-binoculars"></i></a>
+      <a title="{{ _('Edit source') }}" href="{{ viewedit_href }}{{ viewedit_subref }}?mode=edit"> <i class="fa fa-pencil"></i></a>
+      {% else %}
+      <a title="{{ _('View source') }}" href="{{ viewedit_href }}/blob/{{ viewedit_subref }}"><i class="fa fa-binoculars"></i></a>
+      <a title="{{ _('Edit source') }}" href="{{ viewedit_href }}/edit/{{ viewedit_subref }}"><i class="fa fa-pencil"></i></a>
+      {% endif %}
+    {% endif %}
+  {% elif show_source %}
+    {% if source_url_prefix %}
+      {% set viewedit_ref = source_url_prefix + pagename_wsuffix %}
+      {% set viewedit_nofollow = '' %}
+    {% elif has_source and sourcename %}
+      {% set viewedit_ref = pathto('_sources/' + sourcename, true)|e %}
+      {% set viewedit_nofollow = ' rel="nofollow"' %}
+    {% endif %}
+    {% if viewedit_ref %}
+      <a title="{{ _('View page source') }}" href="{{ viewedit_ref }}"{{ viewedit_nofollow }}><i class="fa fa-binoculars"></i></a>
+    {% endif %}
+  {% endif %}
+{% endif %}
 </li>
