@@ -343,28 +343,52 @@
   // This makes me terribly unhappy and makes this code very nesty. Unfortunately I've seen hand-written docs
   // that output similar, but not quite the same nesting so this is really the best we can do.
   dl:not(.docutils)
-    // In Sphinx 2.0+ most DLs no longer contain .docutils, needs tighter scoping using next line
-    &.class, &.data, &.type, &.function
-      margin-bottom: $base-line-height
-      // This would be the equivilant of a .. class::
+    margin-bottom: 0
+    // This would be the equivilant of a .. class::
+    dt
+      display: table
+      margin: $base-line-height / 4 0
+      line-height: normal
+      background: lighten($class-color, 50%)
+      color: $class-color
+      border-top: solid 3px lighten($class-color, 20%)
+      padding: $base-line-height / 4
+      position: relative
+      &:before
+        color: lighten($class-color, 20%)
+      .headerlink
+        color: $text-color
+        font-size: 100% !important
+    // And this would be the .. method::
+    dl.method
+      border-top: 1px solid
+      padding-top: $base-line-height / 2
+      margin-top: $base-line-height / 2
+      dt code.sig-name
+        padding-right: 8px
+    dl dt
+      margin-bottom: $base-line-height / 4
+      border: none
+      border-left: solid 3px hsl(0,0%,80%)
+      background: hsl(0,0%,94%)
+      color: $method-color
+      .headerlink
+        color: $headerlink-color
+        font-size: 100% !important
+    dl.field-list
       dt
-        display: table
-        margin: $base-line-height / 4 0
-        font-size: 90%
-        line-height: normal
-        background: lighten($class-color, 50%)
-        color: $class-color
-        border-top: solid 3px lighten($class-color, 20%)
-        padding: $base-line-height / 4
-        position: relative
-        &:before
-          color: lighten($class-color, 20%)
-        .headerlink
-          color: $text-color
-          font-size: 100% !important
-      // And this would be the .. method::
-      dl dt
-        margin-bottom: $base-line-height / 4
+        background: unset
+        border-left: unset
+        margin-top: 2px
+        margin-bottom: 0
+        padding-left: 0
+    dt:first-child
+      margin-top: 0
+    // Since dts get the callout style, we treat this less as callouts.
+    tt, code
+      font-weight: bold
+      &.descname, &.descclassname
+        background-color: transparent
         border: none
         border-left: solid 3px hsl(0,0%,80%)
         background: hsl(0,0%,94%)

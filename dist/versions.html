@@ -1,0 +1,25 @@
+{% if current_version %}
+  <span class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    {% if versions %}
+      <select class="versions" onchange="location = this.value;">
+        {% for slug, url in versions %}
+          {%- if slug == current_version %}
+            <option value="{{ url }}" selected="selected">{{ slug }}</option>
+          {% else %}
+            <option value="{{ url }}">{{ slug }}</option>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <span class="rst-current-version" data-toggle="rst-current-version">v: {{ current_version }}</span>
+      {% endif %}
+      </select>
+    <span class="downloads">
+      {% for type, url in downloads %}
+        {%- if type == 'PDF' %}  {%- set dw_icon = "file-pdf-o" %}     {% endif %}
+        {%- if type == 'HTML' %} {%- set dw_icon = "file-archive-o" %} {% endif %}
+        {%- if type == 'EPUB' %} {%- set dw_icon = "file-text-o" %}    {% endif %}
+        <a title="Download {{ type }}" href="{{ url }}"><i class="fa fa-{{ dw_icon }}"></i></a>
+      {% endfor %}
+    </span>
+  </span>
+{% endif %}
