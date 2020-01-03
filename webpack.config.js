@@ -1,8 +1,15 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const ShellPlugin = require("webpack-shell-plugin");
 
 module.exports = {
+  mode: "production",
+  optimization: {
+    minimizer: [new TerserPlugin(), new OptimizeCssAssetsPlugin({})]
+  },
   entry: {
     theme: ["./src/theme.js", "./src/sass/theme.sass"],
     badge_only: "./src/sass/badge_only.sass"
@@ -72,5 +79,20 @@ module.exports = {
         flatten: true,
         to: path.resolve(__dirname,'sphinx_rtd_theme/static/js') },
     ]),
-  ]
+    new ShellPlugin({
+      onBuildEnd: ["make -C docs clean html"],
+      // dev=false here to force every build to trigger make, the default is
+      // first build only.
+      dev: false
+    })
+  ],
+  devServer: {
+    contentBase: path.join(__dirname, "docs/build/html"),
+    watchContentBase: true,
+    compress: false,
+    port: 1919,
+    hot: false,
+    liveReload: true,
+    publicPath: "/_static/"
+  },
 };
