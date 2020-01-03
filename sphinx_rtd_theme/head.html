@@ -8,6 +8,16 @@
 {# FAVICON #}
 {% if favicon %}
   <link rel="shortcut icon" href="{{ pathto('_static/' + favicon, 1) }}"/>
+{% else %}
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ pathto('_static', 1) }}/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="{{ pathto('_static', 1) }}/favicons/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ pathto('_static', 1) }}/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ pathto('_static', 1) }}/favicons/favicon-16x16.png">
+  <link rel="manifest" href="{{ pathto('_static', 1) }}/favicons/manifest.json">
+  <link rel="mask-icon" href="{{ pathto('_static', 1) }}/favicons/safari-pinned-tab.svg" color="#414141">
+  <meta name="apple-mobile-web-app-title" content="BuildTheDocs">
+  <meta name="application-name" content="BuildTheDocs">
+  <meta name="theme-color" content="#e6e6e6">
 {% endif %}
 {# CANONICAL URL #}
 {% if theme_canonical_url %}
