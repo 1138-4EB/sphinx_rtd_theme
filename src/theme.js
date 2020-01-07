@@ -225,6 +225,8 @@ $(document).ready(function() {
         $v.append( ( el === curr ) ?
           '<li class="vercurr"><i class="fa fa-code-fork" data-toggle="list-versions">&nbsp;</i> <a href="' + pathToMasterDoc + '">v' + el + '</a></li>'
         :
+          // FIXME: check that the replaced URL exists, otherwise link to the masterdoc of the other version
+          // This is because some pages (URLs) might exist in a version but not in others
           '<li class="verother" data-toggle="other-version" style="display: none;"><a href="' + url.replace(vcurr, '/v' + el + '/') + '">v' + el + '</a></li>'
         );
       });
