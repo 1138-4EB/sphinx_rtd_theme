@@ -1,0 +1,14 @@
+name: 'doc'
+
+on: [push, pull_request]
+
+jobs:
+
+  btd:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: cp -r sphinx_btd_theme docs/_theme
+    - uses: buildthedocs/btd@master
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}

@@ -59,8 +59,8 @@ intersphinx_mapping = {
     'sphinx': ('http://www.sphinx-doc.org/en/stable/', None),
 }
 
-html_theme = 'sphinx_btd_theme'
-html_theme_path = ["_themes"]
+html_theme_path = ["."]
+html_theme = '_theme'
 html_theme_options = {
     'logo_only': True,
     'navigation_depth': 5,
