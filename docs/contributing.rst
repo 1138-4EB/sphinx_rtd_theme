@@ -2,10 +2,6 @@
 Contributing
 ************
 
-This project follows the Read the Docs :doc:`code of conduct
-<rtd:code-of-conduct>`. If you are not familiar with our code of conduct policy,
-take a minute to read the policy before starting with your first contribution.
-
 Modifying the theme
 ===================
 

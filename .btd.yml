@@ -1,0 +1,12 @@
+input: docs
+output: build
+target: gh-pages
+formats: [ html ]
+versions:
+  - id: master
+#    title: ""
+#    description: ""
+#    warning: ""
+#  - id: v0.0.0
+images:
+  latex: btdi/latex

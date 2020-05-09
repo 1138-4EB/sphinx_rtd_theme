@@ -3,8 +3,11 @@
 import sys
 import os
 import re
+from pathlib import Path
+from json import dump, loads
 
-# If we are building locally, or the build on Read the Docs looks like a PR
+
+# If we are building locally, or the build on Build the Docs looks like a PR
 # build, prefer to use the version of the theme in this repo, not the installed
 # version of the theme.
 def is_development_build():
@@ -21,14 +24,14 @@ if is_development_build():
     sys.path.insert(0, os.path.abspath('..'))
 sys.path.append(os.path.abspath('./demo/'))
 
-import sphinx_rtd_theme
+#import sphinx_btd_theme
 from sphinx.locale import _
 
-project = u'Read the Docs Sphinx Theme'
+project = u'Build the Docs Sphinx Theme'
 slug = re.sub(r'\W+', '-', project.lower())
-version = '0.5.0'
-release = '0.5.0'
-author = u'Dave Snider, Read the Docs, Inc. & contributors'
+version = '0.5.0rc2'
+release = '0.5.0rc2'
+author = u'Build the Docs, based on work by Dave Snider, Read the Docs, Inc. & contributors'
 copyright = author
 language = 'en'
 
@@ -38,7 +41,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     'sphinxcontrib.httpdomain',
-    'sphinx_rtd_theme',
+    #'sphinx_btd_theme',
 ]
 
 templates_path = ['_templates']
@@ -56,7 +59,8 @@ intersphinx_mapping = {
     'sphinx': ('http://www.sphinx-doc.org/en/stable/', None),
 }
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'sphinx_btd_theme'
+html_theme_path = ["_themes"]
 html_theme_options = {
     'logo_only': True,
     'navigation_depth': 5,
@@ -72,6 +76,10 @@ if not 'READTHEDOCS' in os.environ:
         lambda x: str(x / 10),
         range(1, 100)
     ))
+
+ctx = Path(__file__).resolve().parent / 'context.json'
+if ctx.is_file():
+    html_context.update(loads(ctx.open('r').read()))
 
 html_logo = "demo/static/logo-wordmark-light.svg"
 html_show_sourcelink = True
