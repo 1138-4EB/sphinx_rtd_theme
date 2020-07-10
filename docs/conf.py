@@ -52,7 +52,6 @@ gettext_compact = False
 
 master_doc = 'index'
 suppress_warnings = ['image.nonlocal_uri']
-pygments_style = 'default'
 
 intersphinx_mapping = {
     'rtd': ('https://docs.readthedocs.io/en/latest/', None),
