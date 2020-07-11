@@ -21,6 +21,7 @@ For example:
         'style_external_links': False,
         'vcs_pageview_mode': '',
         'style_nav_header_background': 'white',
+        'home_breadcrumbs': True,
         # Toc options
         'collapse_navigation': True,
         'sticky_navigation': True,
@@ -28,6 +29,7 @@ For example:
         'includehidden': True,
         'titles_only': False
     }
+
 
 Table of contents options
 -------------------------
@@ -157,7 +159,14 @@ Miscellaneous options
     :default: ``#2980B9``
 
     Changes the background of the search area in the navigation bar. The value
-    can be anything valid in a CSS `background` property. 
+    can be anything valid in a CSS `background` property.
+
+.. confval:: home_breadcrumbs
+
+    :type: boolean
+    :default: ``True``
+
+    Show breadcrumbs on Home (index) page.
 
 .. _canonical URL: https://en.wikipedia.org/wiki/Canonical_link_element
 

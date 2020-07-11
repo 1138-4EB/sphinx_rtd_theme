@@ -63,6 +63,7 @@ html_theme = '_theme'
 html_theme_options = {
     'logo_only': True,
     'navigation_depth': 5,
+    'home_breadcrumbs': False,
 }
 html_context = {}
 

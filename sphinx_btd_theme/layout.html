@@ -189,7 +189,9 @@
         {% else %}
         <div class="rst-content">
         {% endif %}
-          {% include "breadcrumbs.html" %}
+          {% if pagename != 'index' or theme_home_breadcrumbs %}
+            {% include "breadcrumbs.html" %}
+          {% endif %}
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
           {%- block document %}
            <div itemprop="articleBody">
