@@ -34,8 +34,9 @@ html
     color: $nav-caption
     height: $base-font-size * 2
     line-height: $base-font-size * 2
-    padding: 0 $gutter
-    margin: $base-line-height / 2 0 0 0
+    padding: 0 $gutter/2
+    margin: $base-line-height/4 0 0 0
+    border-top: 1px solid $nav-caption
     display: block
     font-weight: bold
     text-transform: uppercase
@@ -190,14 +191,14 @@ html
   display: block
   width: $nav-desktop-width
   padding: $gutter / 2
-  margin-bottom: $gutter / 2
+  margin-bottom: 0
   z-index: $z-index-popover
   background-color: $nav-search-background-color
   text-align: center
   color: $nav-search-color
   input[type=text]
     width: 100%
-    border-radius: 50px
+    border-radius: 0px
     padding: 6px 12px
     border-color: darken($link-color, 5%)
   img
@@ -214,7 +215,7 @@ html
     font-weight: bold
     display: inline-block
     padding: $base-line-height / 6 $base-line-height / 4
-    margin-bottom: $gutter / 2
+    margin-bottom: $gutter / 4
     +font-smooth
     &:hover
       background: rgba(255,255,255,.1)
@@ -230,10 +231,9 @@ html
       img.logo
         margin-top: 0.85em  // space it away from the title text
   > div.version
-    margin-top: -1 * ($gutter / 4)
+    margin: 0
     margin-bottom: $gutter / 2
     font-weight: normal
-    color: rgba(255,255,255,.3)
 
 .wy-nav .wy-menu-vertical
   header
@@ -241,7 +241,7 @@ html
   a
     color: $text-light
     &:hover
-      background-color: $link-color
+      background-color: $nav-link-color
       color: $white
 
 [data-menu-wrap]
@@ -294,7 +294,7 @@ html
 
 .wy-nav-top
   display: none
-  background: $link-color
+  background: $nav-link-color
   color: $white
   padding: $gutter / 4 $gutter / 2
   position: relative
