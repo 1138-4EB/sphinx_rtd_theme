@@ -4,25 +4,34 @@ set -e
 
 cd $(dirname $0)
 
+GIT_BRANCH="$1"
 if [ "x$1" = "x" ]; then
-  echo "a release/branch name is required!"
-  exit 1
+  GIT_BRANCH="tip"
 fi
 
-GIT_USER="$(git config user.name)"
-GIT_EMAIL="$(git config user.email)"
-GIT_SHA="$(git rev-parse HEAD)"
-GIT_ORIGIN="$(git config --get remote.origin.url)"
+GIT_USER="GHA"
+GIT_EMAIL="ci@gha"
+GIT_SHA="`git rev-parse HEAD`"
+
+if [ "x$GIT_ORIGIN" = "x" ]; then
+  GIT_ORIGIN="`git config --get remote.origin.url`"
+  GIT_USER="`git config user.name`"
+  GIT_EMAIL="`git config user.email`"
+fi
 
 cp -r sphinx_btd_theme release
 cd release
+
 git init
-git checkout --orphan "$1"
+git checkout --orphan "$GIT_BRANCH"
 git add .
+
 git config --local user.email "$GIT_EMAIL"
 git config --local user.name "$GIT_USER"
-git commit -a -m "$1 $GIT_SHA"
 git remote add origin "$GIT_ORIGIN"
-git push origin +"$1"
+
+git commit -a -m "$GIT_BRANCH $GIT_SHA"
+git push origin +"$GIT_BRANCH"
+
 cd ..
 rm -rf release
