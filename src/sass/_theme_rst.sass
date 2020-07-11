@@ -94,9 +94,9 @@
     font-family: $code-font-family
     font-size: 12px
     line-height: 1.4
-  
+
   // Do not allow selection of code block prompts
-  div.highlight .gp 
+  div.highlight .gp
     user-select: none
     pointer-events: none
 
@@ -114,6 +114,7 @@
   // These are the various note pullouts that sphinx applies
   .note, .attention, .caution, .danger, .error, .hint, .important, .tip, .warning, .seealso, .admonition-todo, .admonition
     @extend .wy-alert
+    margin: $base-line-height/2 0
     // These block elements are unsuitable for having floating objects next
     // to them
     clear: both
@@ -141,6 +142,7 @@
       border-color: rgba(0,0,0,.1) !important
   .section ul, .toctree-wrapper ul
     @extend .wy-plain-list-disc
+    margin-bottom: $base-line-height / 2
   .section ol.loweralpha, .section ol.loweralpha > li
     list-style: lower-alpha
   .section ol.upperalpha, .section ol.upperalpha > li
@@ -150,17 +152,10 @@
   // Complex bullet lists, they have more item margins than simple lists
   .section ol li, .section ul li
     > *
-      margin-top: $base-line-height / 2
-      margin-bottom: $base-line-height / 2
-      &:first-child
-        margin-top: 0rem
-    > p
-      &, &:last-child
-        margin-bottom: $base-line-height / 2
-      &:only-child, &:only-child:last-child
-        margin-bottom: 0rem
-    > ul, > ol
-      margin-bottom: $base-line-height / 2
+      margin-top: 0
+      margin-bottom: 0
+    > .admonition
+      margin: $base-line-height/2 0
   // Simple lists, no item margins
   .section ol.simple li, .section ul.simple li
     > *
