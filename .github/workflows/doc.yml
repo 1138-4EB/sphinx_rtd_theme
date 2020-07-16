@@ -13,8 +13,6 @@ jobs:
         npm ci
         npm run build
     - run: ./release.sh
-      env:
-        GIT_ORIGIN: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
     - run: cp -r sphinx_btd_theme docs/_theme
     - uses: buildthedocs/btd@master
       with:

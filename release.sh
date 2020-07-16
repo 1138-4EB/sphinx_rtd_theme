@@ -13,7 +13,7 @@ GIT_USER="GHA"
 GIT_EMAIL="ci@gha"
 GIT_SHA="`git rev-parse HEAD`"
 
-if [ "x$GIT_ORIGIN" = "x" ]; then
+if [ -z "$GITHUB_ACTIONS" ]; then
   GIT_ORIGIN="`git config --get remote.origin.url`"
   GIT_USER="`git config user.name`"
   GIT_EMAIL="`git config user.email`"
@@ -23,14 +23,19 @@ cp -r sphinx_btd_theme release
 cd release
 
 git init
+
+[ -n "$GITHUB_ACTIONS" ] && cp ../.git/config ./.git/config
+
 git checkout --orphan "$GIT_BRANCH"
 git add .
 
 git config --local user.email "$GIT_EMAIL"
 git config --local user.name "$GIT_USER"
-git remote add origin "$GIT_ORIGIN"
+
+[ -z "$GITHUB_ACTIONS" ] && git remote add origin "$GIT_ORIGIN"
 
 git commit -a -m "$GIT_BRANCH $GIT_SHA"
+
 git push origin +"$GIT_BRANCH"
 
 cd ..
